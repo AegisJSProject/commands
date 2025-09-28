@@ -81,6 +81,6 @@
     "@shgysk8zer0/http-server": "^1.1.1",
     "@shgysk8zer0/polyfills": "^0.4.13",
     "eslint": "^9.36.0",
-    "rollup": "^4.52.2"
+    "rollup": "^4.52.3"
   }
 }
