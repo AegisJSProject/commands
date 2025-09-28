@@ -16,6 +16,10 @@ let registrationOpen = true;
  */
 export function handleCommand(event) {
 	switch(event.command) {
+		case COMMANDS.show:
+			event.target.show();
+			break;
+
 		case COMMANDS.hide:
 			event.target.hidden = true;
 			break;

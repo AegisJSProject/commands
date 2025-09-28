@@ -5,6 +5,16 @@ export const PREFIX = '--aegis-command-';
  * @type {Object<string, string>}
  */
 export const COMMANDS = {
+	// Built-in commands
+	showModal: 'show-modal',
+	requestClose: 'request-close',
+	close: 'close',
+	showPopover: 'show-popover',
+	hidePopover: 'hide-popover',
+	togglePopover: 'toggle-popover',
+
+	// Custom commands
+	show: PREFIX + 'show',
 	hide: PREFIX + 'hide',
 	unhide: PREFIX + 'unhide',
 	disable: PREFIX + 'disable',

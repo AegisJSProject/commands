@@ -147,7 +147,12 @@ observeCommands();
 
 Command events extend regular events with:
 - `source` - The element that triggered the command (the button/trigger)
-- `command` - The command string that was executed
+- `command` - The command string that was executed#
+
+# Memory Considerations
+
+> [!WARNING]
+> Command listeners are not automatically removed when elements are deleted. If you're frequently adding/removing elements with `commandfor` attributes in long-running applications, consider using `listenForCommands()` with `{ once: true }` for one-time interactions, or manually manage listeners for dynamic content.
 
 ## Security
 
