@@ -17,3 +17,4 @@ importmap.yaml
 *.bak
 *.env
 !*.map
+home.js
