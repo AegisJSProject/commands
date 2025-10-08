@@ -14,6 +14,8 @@ export const COMMANDS = {
 	togglePopover: 'toggle-popover',
 
 	// Custom commands
+	addClass: PREFIX + 'add-class',
+	removeClass: PREFIX + 'remove-class',
 	show: PREFIX + 'show',
 	hide: PREFIX + 'hide',
 	unhide: PREFIX + 'unhide',
@@ -34,4 +36,13 @@ export const COMMANDS = {
 	pauseMedia: PREFIX + 'pause-media',
 	requestPictureInPicture: PREFIX + 'request-picture-in-picture',
 	copyText: PREFIX + 'copy-text',
+};
+
+export const ROOT_COMMANDS = {
+	print: PREFIX + 'root-print',
+	share: PREFIX + 'root-share',
+	back: PREFIX + 'root-back',
+	forward: PREFIX + 'root-forward',
+	reload: PREFIX + 'root-reload',
+	exitFullscreen: PREFIX + 'root-exit-fullscreen',
 };
