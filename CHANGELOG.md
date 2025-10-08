@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v1.0.1] - 2025-10-08
+
+### Added
+- Add commands registry for `document.documentElement` / `<html>` / `:root` / `:host`
+- Add support for passing arguments with command via `--command:arg1:arg2:...:argn`
+- Add predefined command for adding/removing classes
+
+### Changed
+- Use `event.preventDefault()` and `event.stopImmediatePropagation()` for handled events
+
 ## [v1.0.0] - 2025-09-28
 
 Initial Release
