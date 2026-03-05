@@ -2,15 +2,24 @@ import { COMMANDS, ROOT_COMMANDS } from './consts.js';
 import { getCommandWithArgs } from './utils.js';
 import { Importmap } from '@shgysk8zer0/importmap';
 
-const importmap = new Importmap();
-await importmap.importLocalPackage();
-const integrity = await importmap.getIntegrity();
-
-const script = `import { observeCommands, initRootCommands, registerRootCommand, registerCommand } from '/commands.js'
+const importmap = new Importmap(); // Serializes to `{"imports": {...}, "scropes": {}}` from a trusted library
+await importmap.importLocalPackage(); // Adds the local project/package to the `imports` via `package.json`
+const importmapSRI = await importmap.getIntegrity({ algo: 'SHA-384' });
+const POLYFILL_SRI = 'sha384-7yz8QDqFdoZyAnsrpHCA/lGoTyWgsFBb4jWnbCDDEDI/AUhhqgBPDhAejhhSRgAN';
+const script = `
+import { observeCommands, initRootCommands, registerRootCommand, registerCommand } from '/commands.js'
 import properties from '@aegisjsproject/styles/css/properties.css' with { type: 'css' };
 import theme from '@aegisjsproject/styles/css/theme.css' with { type: 'css' };
 import btn from '@aegisjsproject/styles/css/button.css' with { type: 'css' };
 import misc from '@aegisjsproject/styles/css/misc.css' with { type: 'css' };
+
+trustedTypes.createPolicy('default', {
+	createHTML(input) {
+		const el = document.createElement('template'); // Ensures it is inert
+		el.setHTML(input); // Uses the Sanitizer API
+		return el.innerHTML; // Returns safe, sanitized HTML;
+	}
+});
 
 document.adoptedStyleSheets = [properties, theme, btn, misc];
 registerRootCommand('--menu', () => document.getElementById('menu').showPopover());
@@ -29,17 +38,23 @@ const style = `:root {
 }`;
 
 const sri = async text => await crypto.subtle.digest('SHA-384', new TextEncoder().encode(text))
-	.then(digest => new Uint8Array(digest).toBase64())
-	.then(hash => `sha384-${hash}`);
+	.then(digest => 'sha384-' + new Uint8Array(digest).toBase64());
 
 const scriptSRI = await sri(script);
 const styleSRI = await sri(style);
 
 const headers = new Headers({
 	'Content-Type': 'text/html',
-	'Content-Security-Policy': `default-src 'self'; script-src 'self' '${scriptSRI}' '${integrity}'; style-src ${importmap.resolve('@aegisjsproject/styles/css/')} '${styleSRI}'; media-src https://0eff4f4c-7f45-405c-8cf6-f7a3b3c1f07e.mdnplay.dev; trusted-types aegis-sanitizer#html; require-trusted-types-for 'script';`,
+	'Referrer-Policy': 'no-referrer',
+	// Cannot add `integrity` to an `import`ed module
+	// 'Integrity-Policy': 'blocked-destinations=(script)',
+	'Content-Security-Policy': `default-src 'none'; script-src 'self' '${scriptSRI}' '${POLYFILL_SRI}' '${importmapSRI}'; style-src ${importmap.resolve('@aegisjsproject/styles/css/')} '${styleSRI}'; font-src 'self'; base-uri 'self'; manifest-src 'self'; worker-src 'self'; object-src 'none'; frame-ancestors 'none'; form-action 'self'; child-src 'self'; connect-src 'self'; img-src 'self' blob:; media-src https://0eff4f4c-7f45-405c-8cf6-f7a3b3c1f07e.mdnplay.dev; sandbox allow-scripts allow-modals allow-popups allow-forms allow-downloads allow-top-navigation-by-user-activation allow-same-origin; trusted-types default aegis-sanitizer#html; require-trusted-types-for 'script'; upgrade-insecure-requests;`,
+	'Permissions-Policy': 'accelerometer=(), ambient-light-sensor=(), attribution-reporting=(), autoplay=(), battery=(), bluetooth=(), browsing-topics=(), camera=(self), compute-pressure=(), cross-origin-isolated=(), display-capture=(), encrypted-media=(), fullscreen=(self), gamepad=(), geolocation=(self), gyroscope=(), hid=(), identity-credentials-get=(), idle-detection=(), local-fonts=(self), magnetometer=(), microphone=(self), midi=(), otp-credentials=(), payment=(), picture-in-picture=(self), publickey-credentials-get=(self), screen-wake-lock=(self), serial=(), speaker-selection=(), storage-access=(), usb=(), web-share=(self), window-management=(), xr-spatial-tracking=()',
+	'Cross-Origin-Embedder-Policy': 'require-corp',
+	'Cross-Origin-Opener-Policy': 'same-origin',
+	'Cross-Origin-Resource-Policy': 'same-site',
+	'Origin-Agent-Cluster': '?1',
 });
-
 
 const doc = `<!DOCTYPE html>
 <html id="doc">
@@ -47,8 +62,9 @@ const doc = `<!DOCTYPE html>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width" />
 		<meta name="color-scheme" content="light dark" />
+		<link rel="icon" href="/favicon.svg" type="image/svg+xml" sizes="any">
 		${await importmap.getScript()}
-		<script src="/node_modules/@shgysk8zer0/polyfills/browser.min.js" referrerpolicy="no-referrer" defer=""></script>
+		<script src="${importmap.resolve('@shgysk8zer0/polyfills')}" crossorigin="anonymous" referrerpolicy="no-referrer" integrity="${POLYFILL_SRI}" defer=""></script>
 		<script type="module" integrity="${scriptSRI}">${script}</script>
 		<style integrity="${styleSRI}" id="style">${style}</style>
 	</head>
