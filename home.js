@@ -37,7 +37,7 @@ const styleSRI = await sri(style);
 
 const headers = new Headers({
 	'Content-Type': 'text/html',
-	'Content-Security-Policy': `default-src 'self'; script-src 'self' '${scriptSRI}' '${integrity}'; style-src ${importmap.resolve('@aegisjsproject/styles/css/')} '${styleSRI}'; media-src https://0eff4f4c-7f45-405c-8cf6-f7a3b3c1f07e.mdnplay.dev;`,
+	'Content-Security-Policy': `default-src 'self'; script-src 'self' '${scriptSRI}' '${integrity}'; style-src ${importmap.resolve('@aegisjsproject/styles/css/')} '${styleSRI}'; media-src https://0eff4f4c-7f45-405c-8cf6-f7a3b3c1f07e.mdnplay.dev; trusted-types aegis-sanitizer#html; require-trusted-types-for 'script';`,
 });
 
 
