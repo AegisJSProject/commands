@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v1.0.2] - 2026-03-05
+
+### Added
+- Add `title`, `description`, and `url` to `share` in root commands
+
+### Changed
+- Update node to 24.10.0
+- Update npm publishing
+- Update dependencies
+
 ## [v1.0.1] - 2025-10-08
 
 ### Added
