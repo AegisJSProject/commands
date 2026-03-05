@@ -1,6 +1,6 @@
 {
   "name": "@aegisjsproject/commands",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A lightweight command system for handling DOM interactions through custom events and the `commandfor` attribute.",
   "keywords": [
     "aegisjsproject",
@@ -76,11 +76,12 @@
   },
   "homepage": "https://github.com/AegisJSProject/commands#readme",
   "devDependencies": {
-    "@rollup/plugin-terser": "^0.4.4",
-    "@shgysk8zer0/eslint-config": "^1.0.4",
+    "@rollup/plugin-terser": "^1.0.0",
+    "@shgysk8zer0/eslint-config": "^1.0.7",
     "@shgysk8zer0/http-server": "^1.1.1",
-    "@shgysk8zer0/polyfills": "^0.6.0",
-    "eslint": "^10.0.0",
-    "rollup": "^4.52.3"
+    "@shgysk8zer0/importmap": "^1.8.1",
+    "@shgysk8zer0/polyfills": "^0.6.2",
+    "eslint": "^10.0.2",
+    "rollup": "^4.59.0"
   }
 }

@@ -86,7 +86,13 @@ export function handleRootCommand(event) {
 					_disableSource(event);
 					_finalizeEvent(event);
 
-					navigator.share({ title: document.title, url: location.href })
+					const {
+						shareTitle: title = document.title,
+						shareUrl: url = location.href,
+						shareText: text,
+					} = event.source.dataset;
+
+					navigator.share({ title, url, text })
 						.then(() => _enableSource(event))
 						.catch(globalThis.reportError);
 				} else {
