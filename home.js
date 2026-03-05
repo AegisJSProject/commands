@@ -13,12 +13,21 @@ import theme from '@aegisjsproject/styles/css/theme.css' with { type: 'css' };
 import btn from '@aegisjsproject/styles/css/button.css' with { type: 'css' };
 import misc from '@aegisjsproject/styles/css/misc.css' with { type: 'css' };
 
+trustedTypes.createPolicy('default', {
+	createHTML(input) {
+		const el = document.createElement('template'); // Ensures it is inert
+		el.setHTML(input); // Uses the Sanitizer API
+		return el.innerHTML; // Returns safe, sanitized HTML;
+	}
+});
+
 document.adoptedStyleSheets = [properties, theme, btn, misc];
 registerRootCommand('--menu', () => document.getElementById('menu').showPopover());
 registerRootCommand('--help', () => document.getElementById('help').showPopover());
 registerRootCommand('--log', (event, ...args) => console.log({ event, args }));
 observeCommands();
-initRootCommands();`;
+initRootCommands();
+`;
 
 const style = `:root {
 	color-scheme: dark;
@@ -39,7 +48,7 @@ const headers = new Headers({
 	'Referrer-Policy': 'no-referrer',
 	// Cannot add `integrity` to an `import`ed module
 	// 'Integrity-Policy': 'blocked-destinations=(script)',
-	'Content-Security-Policy': `default-src 'none'; script-src 'self' '${scriptSRI}' '${POLYFILL_SRI}' '${importmapSRI}'; style-src ${importmap.resolve('@aegisjsproject/styles/css/')} '${styleSRI}'; font-src 'self'; base-uri 'self'; manifest-src 'self'; worker-src 'self'; object-src 'none'; frame-ancestors 'none'; form-action 'self'; child-src 'self'; connect-src 'self'; img-src 'self' blob:; media-src https://0eff4f4c-7f45-405c-8cf6-f7a3b3c1f07e.mdnplay.dev; sandbox allow-scripts allow-modals allow-popups allow-forms allow-downloads allow-top-navigation-by-user-activation allow-same-origin; trusted-types aegis-sanitizer#html; require-trusted-types-for 'script'; upgrade-insecure-requests;`,
+	'Content-Security-Policy': `default-src 'none'; script-src 'self' '${scriptSRI}' '${POLYFILL_SRI}' '${importmapSRI}'; style-src ${importmap.resolve('@aegisjsproject/styles/css/')} '${styleSRI}'; font-src 'self'; base-uri 'self'; manifest-src 'self'; worker-src 'self'; object-src 'none'; frame-ancestors 'none'; form-action 'self'; child-src 'self'; connect-src 'self'; img-src 'self' blob:; media-src https://0eff4f4c-7f45-405c-8cf6-f7a3b3c1f07e.mdnplay.dev; sandbox allow-scripts allow-modals allow-popups allow-forms allow-downloads allow-top-navigation-by-user-activation allow-same-origin; trusted-types default aegis-sanitizer#html; require-trusted-types-for 'script'; upgrade-insecure-requests;`,
 	'Permissions-Policy': 'accelerometer=(), ambient-light-sensor=(), attribution-reporting=(), autoplay=(), battery=(), bluetooth=(), browsing-topics=(), camera=(self), compute-pressure=(), cross-origin-isolated=(), display-capture=(), encrypted-media=(), fullscreen=(self), gamepad=(), geolocation=(self), gyroscope=(), hid=(), identity-credentials-get=(), idle-detection=(), local-fonts=(self), magnetometer=(), microphone=(self), midi=(), otp-credentials=(), payment=(), picture-in-picture=(self), publickey-credentials-get=(self), screen-wake-lock=(self), serial=(), speaker-selection=(), storage-access=(), usb=(), web-share=(self), window-management=(), xr-spatial-tracking=()',
 	'Cross-Origin-Embedder-Policy': 'require-corp',
 	'Cross-Origin-Opener-Policy': 'same-origin',
